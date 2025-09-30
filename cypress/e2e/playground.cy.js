@@ -15,4 +15,10 @@ describe('Cypress Playground', () => {
       "You've been successfully subscribed to our newsletter."
     ).should('be.visible')
   })
+
+  it('types in an input which "signs" a form, then asserts it is signed', () => {
+    cy.get('#signature-textarea').type('Felipe Barra')
+    
+    cy.contains('#signature', 'Felipe Barra').should('be.visible')
+  })
 })
