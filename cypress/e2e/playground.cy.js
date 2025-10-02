@@ -18,7 +18,7 @@ describe('Cypress Playground', () => {
 
   it('types in an input which "signs" a form, then asserts it is signed', () => {
     cy.get('#signature-textarea').type('Felipe Barra')
-    
+
     cy.contains('#signature', 'Felipe Barra').should('be.visible')
   })
 
@@ -29,7 +29,7 @@ describe('Cypress Playground', () => {
     cy.contains('#signature-triggered-by-check', 'Felipe Barra').should('be.visible')
 
     cy.get('#signature-checkbox').uncheck().should('not.be.checked')
-    
+
     cy.contains('#signature-triggered-by-check', 'Felipe Barra').should('not.exist')
   })
 
@@ -53,5 +53,16 @@ describe('Cypress Playground', () => {
     cy.get('#selection-type').select(3)
 
     cy.contains('p', "You've selected: VIP").should('be.visible')
+  })
+
+  it('selects a random option from the dropdown and asserts on the selection', () => {
+    cy.contains('p', "You haven't selected a type yet.").should('be.visible')
+    
+    cy.get('#selection-type').find('option').then($options => {
+      const randomIndex = Cypress._.random(1, $options.length - 1)
+      const randomText = $options[randomIndex].innerText
+      cy.get('#selection-type').select(randomText)
+      cy.contains('p', `You've selected: ${randomText.toUpperCase()}`).should('be.visible')
+    })
   })
 })
