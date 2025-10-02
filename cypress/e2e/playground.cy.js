@@ -33,7 +33,7 @@ describe('Cypress Playground', () => {
     cy.contains('#signature-triggered-by-check', 'Felipe Barra').should('not.exist')
   })
 
-  it.only('checks both possible radios and asserts if it is "ON" or "OFF"', () => {
+  it('checks both possible radios and asserts if it is "ON" or "OFF"', () => {
     cy.contains('#on-off', 'ON').should('be.visible')
 
     cy.get('#off').check().should('be.checked')
@@ -45,5 +45,13 @@ describe('Cypress Playground', () => {
 
     cy.contains('#on-off', 'ON').should('be.visible')
     cy.contains('#on-off', 'OFF').should('not.exist')
+  })
+
+  it('selects an option from the dropdown and asserts on the selection', () => {
+    cy.contains('p', "You haven't selected a type yet.").should('be.visible')
+
+    cy.get('#selection-type').select(3)
+
+    cy.contains('p', "You've selected: VIP").should('be.visible')
   })
 })
