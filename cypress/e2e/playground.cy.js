@@ -57,12 +57,21 @@ describe('Cypress Playground', () => {
 
   it('selects a random option from the dropdown and asserts on the selection', () => {
     cy.contains('p', "You haven't selected a type yet.").should('be.visible')
-    
+
     cy.get('#selection-type').find('option').then($options => {
       const randomIndex = Cypress._.random(1, $options.length - 1)
       const randomText = $options[randomIndex].innerText
       cy.get('#selection-type').select(randomText)
       cy.contains('p', `You've selected: ${randomText.toUpperCase()}`).should('be.visible')
     })
+  })
+
+  it('selects multiple fruits from the dropdown field and asserts on the selections', () => {
+    cy.contains('p', "You haven't selected any fruit yet.").should('be.visible')
+
+    cy.get('#fruit').select(['apple', 'banana', 'cherry', 'date', 'elderberry'])
+
+    cy.contains('p', "You've selected the following fruits: apple, banana, cherry, date, elderberry")
+      .should('be.visible')
   })
 })
