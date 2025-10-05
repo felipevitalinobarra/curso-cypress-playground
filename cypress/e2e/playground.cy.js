@@ -116,4 +116,22 @@ describe('Cypress Playground', () => {
     cy.contains('li', `Completed: ${todo.completed}`).should('be.visible')
     cy.contains('li', `User ID: ${todo.userId}`).should('be.visible')
   })
+
+  it('clicks a button and simulates a API failure and shows an error message', () => {
+    cy.intercept(
+      'GET',
+      'https://jsonplaceholder.typicode.com/todos/1',
+      { statusCode: 500 }
+    ).as('serverFailure')
+
+    cy.contains('button', 'Get TODO').click()
+    cy.wait('@serverFailure')
+      .its('response.statusCode')
+      .should('be.equal', 500)
+
+    cy.contains(
+      'span',
+      'Oops, something went wrong. Refresh the page and try again.'
+    ).should('be.visible')
+  })
 })
