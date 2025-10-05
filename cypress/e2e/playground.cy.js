@@ -117,7 +117,7 @@ describe('Cypress Playground', () => {
     cy.contains('li', `User ID: ${todo.userId}`).should('be.visible')
   })
 
-  it('clicks a button and simulates a API failure and shows an error message', () => {
+  it('clicks a button and simulates an API failure and shows an error message', () => {
     cy.intercept(
       'GET',
       'https://jsonplaceholder.typicode.com/todos/1',
@@ -130,8 +130,60 @@ describe('Cypress Playground', () => {
       .should('be.equal', 500)
 
     cy.contains(
-      'span',
+      '.error span',
       'Oops, something went wrong. Refresh the page and try again.'
     ).should('be.visible')
+  })
+
+  it('clicks a button and simulates a network failure and shows an error message', () => {
+    cy.intercept(
+      'GET',
+      'https://jsonplaceholder.typicode.com/todos/1',
+      { forceNetworkError: true }
+    ).as('networkError')
+
+    cy.contains('button', 'Get TODO').click()
+    cy.wait('@networkError')
+
+    cy.contains(
+      '.error span',
+      'Oops, something went wrong. Check your internet connection, refresh the page, and try again.'
+    ).should('be.visible')
+  })
+
+  it('simulates server/API failure and recovery', () => {
+    cy.intercept(
+      'GET',
+      'https://jsonplaceholder.typicode.com/todos/1',
+      { statusCode: 500 }
+    ).as('serverFailure')
+
+    cy.contains('button', 'Get TODO').click()
+    cy.wait('@serverFailure')
+      .its('response.statusCode')
+      .should('be.equal', 500)
+
+    cy.contains(
+      '.error span',
+      'Oops, something went wrong. Refresh the page and try again.'
+    ).should('be.visible')
+
+    cy.reload()
+
+    cy.intercept(
+      'GET',
+      'https://jsonplaceholder.typicode.com/todos/1',
+      { middleware: true }
+    ).as('getTodo')
+
+    cy.contains('button', 'Get TODO').click()
+    cy.wait('@getTodo')
+      .its('response.statusCode')
+      .should('be.equal', 200)
+
+    cy.contains('li', 'TODO ID').should('be.visible')
+    cy.contains('li', 'Title').should('be.visible')
+    cy.contains('li', 'Completed').should('be.visible')
+    cy.contains('li', 'User ID').should('be.visible')
   })
 })
