@@ -202,7 +202,7 @@ describe('Cypress Playground', () => {
       .should('be.equal', 200)
   })
 
-  Cypress._.times(10, index => { 
+  Cypress._.times(10, index => {
     it(`selects ${index + 1} out of 10`, () => {
       cy.get('input[type="range"]')
         .invoke('val', index + 1)
@@ -210,5 +210,18 @@ describe('Cypress Playground', () => {
 
       cy.contains('p', `You're on level: ${index + 1}`).should('be.visible')
     })
+  })
+
+  it.only('selects the current date and asserts the correct date has been displayed', () => {
+    const today = new Date()
+
+    cy.get('input[type="date"]')
+      .type(today.toISOString().slice(0, 10))
+      .blur()
+
+    cy.contains(
+      'p',
+      `The date you've selected is: ${today.toISOString().slice(0, 10)}`
+    ).should('be.visible')
   })
 })
