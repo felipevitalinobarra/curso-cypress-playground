@@ -82,6 +82,15 @@ describe('Cypress Playground', () => {
       .should('be.visible')
   })
 
+  it('uploads a file via drag-and-drop and asserts the corret file name appears as a paragraph', () => {
+    cy.get('input[type="file"]').selectFile('./cypress/fixtures/example.json',
+      { action: 'drag-drop' }
+    )
+
+    cy.contains('p', 'The following file has been selected for upload: example.json')
+      .should('be.visible')
+  })
+
   it('clicks a button and triggers a request', () => {
     cy.intercept('GET', 'https://jsonplaceholder.typicode.com/todos/1')
       .as('getTodo')
