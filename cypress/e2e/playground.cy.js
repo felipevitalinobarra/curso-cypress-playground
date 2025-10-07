@@ -195,4 +195,10 @@ describe('Cypress Playground', () => {
     cy.contains('li', 'Completed').should('be.visible')
     cy.contains('li', 'User ID').should('be.visible')
   })
+
+  it('makes a HTTP request and asserts on the returned status code', () => {
+    cy.request('GET', 'https://jsonplaceholder.typicode.com/todos/1')
+      .its('status')
+      .should('be.equal', 200)
+  })
 })
