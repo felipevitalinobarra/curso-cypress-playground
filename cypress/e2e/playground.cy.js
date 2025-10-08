@@ -212,7 +212,7 @@ describe('Cypress Playground', () => {
     })
   })
 
-  it.only('selects the current date and asserts the correct date has been displayed', () => {
+  it('selects the current date and asserts the correct date has been displayed', () => {
     const today = new Date()
 
     cy.get('input[type="date"]')
@@ -223,5 +223,24 @@ describe('Cypress Playground', () => {
       'p',
       `The date you've selected is: ${today.toISOString().slice(0, 10)}`
     ).should('be.visible')
+  })
+
+  it('types a password based on a protected environment variable', () => {
+    cy.get('#password')
+      .as('passwordField')
+      .type(Cypress.env('password'), { log: false })
+
+    cy.get('#show-password-checkbox').check()
+
+    cy.get('@passwordField')
+      .should('have.not.attr', 'type', 'password')
+      .and('have.attr', 'type', 'text')
+      .and('have.value', Cypress.env('password'))
+
+    cy.get('#show-password-checkbox').uncheck()
+
+    cy.get('@passwordField')
+      .should('have.not.attr', 'type', 'text')
+      .and('have.attr', 'type', 'password')
   })
 })
