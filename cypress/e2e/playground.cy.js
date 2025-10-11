@@ -265,4 +265,11 @@ describe('Cypress Playground', () => {
 
     cy.contains('span', "The provided code isn't correct. Please, try again.").should('be.visible')
   })
+
+  it('downloads a file, reads it, and asserts on its content', () => {
+    cy.contains('a', 'Download a text file').click()
+
+    cy.readFile('cypress/downloads/example.txt')
+      .should('be.equal', 'Hello, World!')
+  })
 })
