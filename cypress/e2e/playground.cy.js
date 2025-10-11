@@ -1,5 +1,7 @@
 describe('Cypress Playground', () => {
   beforeEach(() => {
+    const now = new Date(Date.UTC(2019, 10, 9)) // The month starts at 0 (zero)
+    cy.clock(now)
     cy.visit('https://cypress-playground.s3.eu-central-1.amazonaws.com/index.html')
   })
 
@@ -212,17 +214,10 @@ describe('Cypress Playground', () => {
     })
   })
 
-  it('selects the current date and asserts the correct date has been displayed', () => {
-    const today = new Date()
+  it('selects a date and asserts the correct date has been displayed', () => {
+    cy.get('#date').type('2025-11-10').blur()
 
-    cy.get('input[type="date"]')
-      .type(today.toISOString().slice(0, 10))
-      .blur()
-
-    cy.contains(
-      'p',
-      `The date you've selected is: ${today.toISOString().slice(0, 10)}`
-    ).should('be.visible')
+    cy.contains('p', `The date you've selected is: 2025-11-10`).should('be.visible')
   })
 
   it('types a password based on a protected environment variable', () => {
@@ -242,5 +237,13 @@ describe('Cypress Playground', () => {
     cy.get('@passwordField')
       .should('have.not.attr', 'type', 'text')
       .and('have.attr', 'type', 'password')
+  })
+
+  it('counts the number of animals in a list', () => {
+    cy.get('ul#animals li').should('have.length', 5)
+  })
+
+  it('freezes the browser clock and asserts the frozen date is displayed', () => {
+    cy.contains('p', 'Current date: 2019-11-09').should('be.visible')
   })
 })
