@@ -246,4 +246,23 @@ describe('Cypress Playground', () => {
   it('freezes the browser clock and asserts the frozen date is displayed', () => {
     cy.contains('p', 'Current date: 2019-11-09').should('be.visible')
   })
+
+  it('copies the code, types it, submits it, then asserts on the success message', () => {
+    cy.get('#timestamp')
+      .then(element => {
+        const code = element[0].innerText
+
+        cy.get('#code').type(code)
+        cy.contains('button', 'Submit').click()
+
+        cy.contains('span', "Congrats! You've entered the correct code.").should('be.visible')
+      })
+  })
+
+  it('types an incorrect code and asserts on the error message', () => {
+    cy.get('#code').type('0000000000000')
+    cy.contains('button', 'Submit').click()
+
+    cy.contains('span', "The provided code isn't correct. Please, try again.").should('be.visible')
+  })
 })
