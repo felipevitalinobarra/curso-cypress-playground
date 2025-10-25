@@ -223,14 +223,14 @@ describe('Cypress Playground', () => {
   it('types a password based on a protected environment variable', () => {
     cy.get('#password')
       .as('passwordField')
-      .type(Cypress.env('password'), { log: false })
+      .type(Cypress.env('user_password'), { log: false })
 
     cy.get('#show-password-checkbox').check()
 
     cy.get('@passwordField')
       .should('have.not.attr', 'type', 'password')
       .and('have.attr', 'type', 'text')
-      .and('have.value', Cypress.env('password'))
+      .and('have.value', Cypress.env('user_password'))
 
     cy.get('#show-password-checkbox').uncheck()
 
